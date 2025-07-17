@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>가로형 배너 슬라이더</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    .slider {
+      width: calc(100% - 20px);
+      max-width: 1600px;
+      aspect-ratio: 3/1;
+      margin: 20px auto;
+      overflow: hidden;
+      position: relative;
+
+      background: #000;
+    }
+    .slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 1s ease-in-out;
+    }
+    .slide {
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 2;
+      border-radius: 5px;
+    }
+    .prev {
+      left: 10px;
+    }
+    .next {
+      right: 10px;
+    }
+    .nav-button:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* 인디케이터 스타일 */
+    .indicators {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+    }
+    .indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin: 0 6px;
+      background-color: gray;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .indicator.active {
+      background-color: orange;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider">
+    <button class="nav-button prev" onclick="prevSlide()">‹</button>
+    <button class="nav-button next" onclick="showNextSlide()">›</button>
+
+    <div class="slides" id="slides">
+      <div class="slide"><img src="https://tmdwn102.github.io/haeumsaedeul_img//HAEUM.jpg" alt="image1"></div>
+      <div class="slide"><img src="https://tmdwn102.github.io/haeumsaedeul_img/SAEDEUL.jpg" alt="image2"></div>
+          </div>
+
+    <div class="indicators" id="indicators"></div>
+  </div>
+
+  <script>
+    const slides = document.getElementById('slides');
+    const indicatorsContainer = document.getElementById('indicators');
+    const totalSlides = slides.children.length;
+    let index = 0;
+    let interval;
+
+    // 인디케이터 생성
+    function createIndicators() {
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.classList.add('indicator');
+        if(i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+          showSlide(i);
+          resetInterval();
+        });
+        indicatorsContainer.appendChild(dot);
+      }
+    }
+
+    // 인디케이터 활성화 표시
+    function updateIndicators() {
+      const dots = indicatorsContainer.children;
+      for(let i = 0; i < dots.length; i++) {
+        dots[i].classList.toggle('active', i === index);
+      }
+    }
+
+    function showSlide(i) {
+      index = (i + totalSlides) % totalSlides;
+      slides.style.transform = `translateX(-${index * 100}%)`;
+      updateIndicators();
+    }
+
+    function showNextSlide() {
+      showSlide(index + 1);
+    }
+
+    function prevSlide() {
+      showSlide(index - 1);
+    }
+
+    function resetInterval() {
+      clearInterval(interval);
+      interval = setInterval(showNextSlide, 3000);
+    }
+
+    // 초기 실행
+    createIndicators();
+    interval = setInterval(showNextSlide, 3000);
+
+    // 마우스 올리면 자동 슬라이드 멈춤
+    document.querySelector('.slider').addEventListener('mouseenter', () => clearInterval(interval));
+    document.querySelector('.slider').addEventListener('mouseleave', () => resetInterval());
+  </script>
+
+</body>
+</html>
