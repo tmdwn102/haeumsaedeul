@@ -44,10 +44,11 @@ body {
   color: rgba(0,0,0,0.25);
 }
 
-/* ── 두 패널 ────────────────────────────── */
+/* ── 두 패널 (위아래 배치) ──────────────── */
 #panels {
   display: flex;
-  gap: 2vw;
+  flex-direction: column;
+  gap: 2vh;
   padding: 0 2vw;
   width: 100%;
   flex: 1;
@@ -56,11 +57,11 @@ body {
 }
 
 .proj-wrap {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1vh;
-  min-width: 0;
+  gap: 0.8vh;
+  width: 100%;
+  max-width: 90vh; /* 16:9 기준 높이 대비 폭 제한 */
 }
 
 .proj-label {
@@ -172,41 +173,11 @@ body {
   letter-spacing: 0.12em;
 }
 
-/* ── 시작 화면 ──────────────────────────── */
-#start {
-  position: fixed;
-  inset: 0;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  transition: opacity 0.5s ease;
-}
-#start.out { opacity: 0; pointer-events: none; }
+/* ── 시작 화면 — 제거, 하단 버튼으로 통합 */
 
-#start-btn {
-  font-size: clamp(10px, 0.9vw, 14px);
-  font-weight: 100;
-  color: rgba(0,0,0,0.35);
-  letter-spacing: 0.3em;
-  cursor: pointer;
-  border: 1px solid rgba(0,0,0,0.15);
-  padding: 0.8em 2em;
-  transition: color 0.2s, border-color 0.2s;
-  user-select: none;
-}
-#start-btn:hover {
-  color: rgba(0,0,0,0.7);
-  border-color: rgba(0,0,0,0.4);
-}
 </style>
 </head>
 <body>
-
-<div id="start">
-  <div id="start-btn">시작</div>
-</div>
 
 <div id="header">
   <div id="title-text">소 실 &nbsp;·&nbsp; 消 失</div>
@@ -215,13 +186,13 @@ body {
 
 <div id="panels">
   <!-- 벽 프로젝터 -->
-  <div class="proj-wrap">
+  <div class="proj-wrap wall-wrap">
     <div class="proj-label">프로젝터 1 &nbsp;—&nbsp; 벽</div>
     <div class="stage" id="wall-stage"></div>
   </div>
 
   <!-- 바닥 프로젝터 -->
-  <div class="proj-wrap">
+  <div class="proj-wrap floor-wrap">
     <div class="proj-label">프로젝터 2 &nbsp;—&nbsp; 바닥</div>
     <div class="stage" id="floor-stage"></div>
   </div>
@@ -230,9 +201,9 @@ body {
 <div id="controls">
   <div id="progress-bar-bg"><div id="progress-bar-fill"></div></div>
   <div id="bottom-row">
-    <div id="play-btn">▶ &nbsp;시작</div>
-    <div id="hint-text">SPACE 일시정지 &nbsp;·&nbsp; ← → 이동 &nbsp;·&nbsp; R 처음</div>
     <div id="sound-btn">♪ &nbsp;사운드 켜기</div>
+    <div id="hint-text">SPACE 일시정지 &nbsp;·&nbsp; ← → 이동 &nbsp;·&nbsp; R 처음</div>
+    <div id="play-btn">▶ &nbsp;시작</div>
   </div>
 </div>
 
@@ -484,11 +455,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-document.getElementById('start').addEventListener('click', function() {
-  this.classList.add('out');
-  setTimeout(() => this.style.display='none', 600);
-  start();
-});
 
 // ══════════════════════════════════════════
 //  사운드 — Web Audio API
